@@ -11,14 +11,15 @@ const initialState = {
 
 export const getCartItems = createAsyncThunk(
   'cart/getCartItems',
-  async (_, rejectWithValue) => {
+  async (_, thunkAPI) => {
     try {
+      console.log(thunkAPI.getState());
       const resp = await fetch(url);
       const data = await resp.json();
       return data;
     } catch (error) {
       // console.log(error.response);
-      return rejectWithValue('There was an error...');
+      return thunkAPI.rejectWithValue('There was an error...');
     }
   }
 );
