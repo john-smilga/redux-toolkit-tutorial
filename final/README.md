@@ -600,7 +600,7 @@ const Modal = () => {
 export default Modal;
 ```
 
-#### createAsyncThunk
+#### async functionality with createAsyncThunk
 
 - [Course API](https://course-api.com/)
 - https://course-api.com/react-useReducer-cart-project
@@ -608,7 +608,7 @@ export default Modal;
 
 - action type
 - callback function
--
+- lifecycle actions
 
 ```js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
@@ -683,14 +683,17 @@ npm install axios
 ```js
 export const getCartItems = createAsyncThunk(
   'cart/getCartItems',
-  async (_, thunkAPI) => {
+  async (name, thunkAPI) => {
     try {
-      console.log(thunkAPI.getState());
-
+      // console.log(name);
+      // console.log(thunkAPI);
+      // console.log(thunkAPI.getState());
+      // thunkAPI.dispatch(openModal());
       const resp = await axios(url);
-      return resp;
+
+      return resp.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue('There was an error...');
+      return thunkAPI.rejectWithValue('something went wrong');
     }
   }
 );
