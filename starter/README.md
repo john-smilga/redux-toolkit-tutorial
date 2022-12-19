@@ -231,7 +231,7 @@ const CartContainer = () => {
 export default CartContainer;
 ```
 
-- CartItems.js
+- CartItem.js
 
 ```js
 import React from 'react';
