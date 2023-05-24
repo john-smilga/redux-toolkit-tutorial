@@ -1,4 +1,4 @@
 function App() {
-  return <h2>Redux Toolkit</h2>;
+  return <h2>Toolkit</h2>;
 }
 export default App;
