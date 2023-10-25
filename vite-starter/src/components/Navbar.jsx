@@ -1,5 +1,6 @@
 import { CartIcon } from "./ui/icons"
 import { useSelector } from "react-redux"
+import { Link } from 'react-router-dom';
 
 
 export default function Navbar() {
@@ -9,7 +10,7 @@ export default function Navbar() {
         <>
             <nav>
                 <div className="nav-center">
-                    <h3>Redux Toolkit</h3>;
+                    <Link to="/"><h3>Redux Toolkit</h3></Link>
                     <div className="nav-container">
                         <CartIcon />
                         <div className="amount-container">

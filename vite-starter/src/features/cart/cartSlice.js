@@ -1,27 +1,10 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import cartItems from "../../data/cartItems";
-
-const url = 'https://course-api.com/react-useReducer-cart-project'
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     cartItems: [],
     amount: 0,
     total: 0,
-    isLoading: false
 }
-
-
-export const getCartItems = createAsyncThunk('cart/getCartItems', async () => {
-    try {
-        const res = await fetch(url)
-        const data = await res.json()
-        return data;
-
-    } catch (error) {
-        console.log(error)
-    }
-})
-
 
 const cartSlice = createSlice({
     name: 'cart',
@@ -38,14 +21,34 @@ const cartSlice = createSlice({
             state.amount = state.cartItems.reduce((total, item) => total + item.amount, 0)
             state.total = state.cartItems.reduce((total, item) => total + item.price * item.amount, 0).toFixed(2)
         },
-        addItem: (state, action) => {
-            const itemId = action.payload
-            if (!state.cartItems.includes(item => item.id === itemId)) {
-                state.cartItems.push(cartItems.find(item => item.id === itemId))
+        addItem: {
+            reducer: (state, action) => {
+                const itemId = action.payload.id
+                if (!state.cartItems.includes(item => item.id === itemId)) {
+                    //not in the cart
+                    state.cartItems.push(action.payload)
+                }
+                else {
+                    //already in the cart
+                    const item = state.cartItems.find(item => item.id === itemId)
+                    item.amount += action.payload.amount
+                }
                 state.amount = state.cartItems.reduce((total, item) => total + item.amount, 0)
                 state.total = state.cartItems.reduce((total, item) => total + item.price * item.amount, 0).toFixed(2)
+            },
+            prepare: (item) => {
+                return {
+                    payload: {
+                        id: item.id,
+                        title: item.title,
+                        price: item.price,
+                        img: item.img,
+                        amount: item.amount
+                    }
+                }
             }
         },
+
         increase: (state, { payload }) => {
             const cartItem = state.cartItems.find(item => item.id === payload.id)
             cartItem.amount += 1
@@ -54,23 +57,11 @@ const cartSlice = createSlice({
         },
         decrease: (state, { payload }) => {
             const cartItem = state.cartItems.find(item => item.id === payload.id)
-            if (cartItem.amount >= 1) {
+            if (cartItem.amount > 1) {
                 cartItem.amount -= 1
                 state.amount -= 1
                 state.total = state.cartItems.reduce((total, item) => total + item.price * item.amount, 0).toFixed(2)
             }
-        }
-    },
-    extraReducers: {
-        [getCartItems.pending]: (state) => {
-            state.isLoading = true
-        },
-        [getCartItems.fulfilled]: (state, action) => {
-            state.isLoading = false
-            state.cartItems = action.payload
-        },
-        [getCartItems.rejected]: (state) => {
-            state.isLoading = false
         }
     }
 })
